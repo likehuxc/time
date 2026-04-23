@@ -7,11 +7,13 @@ from PyQt5.QtWidgets import QApplication
 from app.bootstrap import bootstrap
 from ui.login_window import LoginWindow
 from ui.main_window import MainWindow
+from ui.theme import apply_theme
 
 
 def main() -> int:
     bootstrap()
     app = QApplication(sys.argv)
+    apply_theme(app)
     main_win = MainWindow()
     main_win.hide()
 
