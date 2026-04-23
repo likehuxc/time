@@ -20,3 +20,10 @@ def test_apply_theme_explicitly_styles_label_foreground_on_dark_surfaces(qapp) -
     stylesheet = qapp.styleSheet()
     assert "QLabel {" in stylesheet
     assert "QLabel#summaryCard" in stylesheet
+
+
+def test_apply_theme_styles_alternating_table_rows_for_dark_mode(qapp) -> None:
+    apply_theme(qapp)
+
+    stylesheet = qapp.styleSheet()
+    assert "alternate-background-color" in stylesheet

@@ -58,6 +58,7 @@ QComboBox,
 QTableView,
 QTableWidget {
     background-color: #102739;
+    alternate-background-color: #163247;
     color: #e6f3ff;
     border: 1px solid #29536b;
     border-radius: 10px;
@@ -68,6 +69,18 @@ QTableWidget {
 
 QTableWidget {
     gridline-color: #163347;
+}
+
+QTableWidget::item,
+QTableView::item {
+    color: #e6f3ff;
+    background-color: transparent;
+}
+
+QTableWidget::item:selected,
+QTableView::item:selected {
+    color: #ffffff;
+    background-color: #1d4d6b;
 }
 
 QHeaderView::section {
