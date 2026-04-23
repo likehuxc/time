@@ -7,6 +7,25 @@ Run from project root: pyinstaller pyinstaller.spec  (or .\\build.ps1)
 
 block_cipher = None
 
+# Torch submodules only used for training / codegen / distributed are excluded
+# to keep inference-only builds fast and stable on Windows.
+_TORCH_TRAINING_EXCLUDES = [
+    'torch.distributed',
+    'torch.distributions',
+    'torch._inductor',
+    'torch._dynamo',
+    'torch.onnx',
+    'torch.utils.tensorboard',
+    'torch.testing',
+    'torch.fx.experimental',
+    'torchgen',
+]
+
+_UNUSED_FRAMEWORK_EXCLUDES = [
+    'tensorflow', 'jax', 'jaxlib', 'sklearn',
+    'IPython', 'jupyter', 'notebook', 'pytest',
+]
+
 a = Analysis(
     ['main.py'],
     pathex=[],
@@ -16,7 +35,7 @@ a = Analysis(
     hookspath=[],
     hooksconfig={},
     runtime_hooks=[],
-    excludes=[],
+    excludes=_TORCH_TRAINING_EXCLUDES + _UNUSED_FRAMEWORK_EXCLUDES,
     win_no_prefer_redirects=False,
     win_private_assemblies=False,
     cipher=block_cipher,
