@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 
 from services.login_preferences import (
     clear_remembered_login,
@@ -14,6 +15,10 @@ from services.login_preferences import (
 
 def test_missing_file_returns_none(tmp_path) -> None:
     assert load_remembered_login(tmp_path / "remembered_login.json") is None
+
+
+def test_qt_platform_is_offscreen_before_fixture_use() -> None:
+    assert os.environ.get("QT_QPA_PLATFORM") == "offscreen"
 
 
 def test_save_load_round_trip(tmp_path) -> None:
@@ -33,6 +38,13 @@ def test_save_load_round_trip(tmp_path) -> None:
 def test_corrupt_payload_returns_none(tmp_path) -> None:
     path = tmp_path / "remembered_login.json"
     path.write_text(json.dumps({"username": "alice"}), encoding="utf-8")
+
+    assert load_remembered_login(path) is None
+
+
+def test_invalid_utf8_returns_none(tmp_path) -> None:
+    path = tmp_path / "remembered_login.json"
+    path.write_bytes(b"\xff\xfe\xff")
 
     assert load_remembered_login(path) is None
 
