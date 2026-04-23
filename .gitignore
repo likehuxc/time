@@ -1,0 +1,43 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.pytest_cache/
+
+# 虚拟环境
+.venv/
+venv/
+env/
+
+# 构建产物
+build/
+dist/
+dist.zip
+*.spec.bak
+
+# IDE / 编辑器
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# 操作系统
+.DS_Store
+Thumbs.db
+
+# 日志与运行缓存
+*.log
+runtime/logs/
+runtime/cache/
+runtime/*.db
+runtime/*.sqlite*
+runtime/users.json
+runtime/forecast.db
+
+# 数据文件（如有大数据集）
+data/*.csv
+data/*.parquet
+data/*.h5

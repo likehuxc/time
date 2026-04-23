@@ -1,0 +1,5 @@
+{
+  "required_columns": ["WHE"],
+  "optional_columns": ["date", "OT", "Wind", "RH"],
+  "frequency_target": "1h"
+}

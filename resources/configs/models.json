@@ -1,0 +1,173 @@
+{
+  "version": 1,
+  "models": [
+    {
+      "id": "dc_itransformer",
+      "label": "DC-iTransformer",
+      "horizons": {
+        "1d": {
+          "pred_len_hours": 24,
+          "checkpoint": null
+        },
+        "7d": {
+          "pred_len_hours": 168,
+          "checkpoint": null
+        }
+      }
+    },
+    {
+      "id": "dc_itransformer_londonb0",
+      "label": "DC-iTransformer（London B0 单变量）",
+      "dataset_line": "londonb0_multi",
+      "seq_len": 256,
+      "label_len": 48,
+      "features_mode": "S",
+      "enc_in": 1,
+      "target_column": "WHE",
+      "required_columns": ["WHE"],
+      "horizons": {
+        "1d": {
+          "pred_len_hours": 24,
+          "checkpoint": "resources/checkpoints/dc_itransformer_londonb0_1d.pth"
+        },
+        "7d": {
+          "pred_len_hours": 168,
+          "checkpoint": "resources/checkpoints/dc_itransformer_londonb0_7d.pth"
+        }
+      }
+    },
+    {
+      "id": "dc_itransformer_ampds",
+      "label": "DC-iTransformer（AMPds 单变量）",
+      "dataset_line": "ampds_single",
+      "seq_len": 512,
+      "label_len": 48,
+      "features_mode": "S",
+      "enc_in": 1,
+      "target_column": "WHE",
+      "required_columns": ["WHE"],
+      "horizons": {
+        "1d": {
+          "pred_len_hours": 24,
+          "checkpoint": "resources/checkpoints/dc_itransformer_ampds_1d.pth"
+        },
+        "7d": {
+          "pred_len_hours": 168,
+          "checkpoint": "resources/checkpoints/dc_itransformer_ampds_7d.pth"
+        }
+      }
+    },
+    {
+      "id": "patchtst_ampds",
+      "label": "PatchTST（AMPds 单变量）",
+      "dataset_line": "ampds_single",
+      "seq_len": 512,
+      "label_len": 48,
+      "features_mode": "S",
+      "enc_in": 1,
+      "target_column": "WHE",
+      "required_columns": ["WHE"],
+      "horizons": {
+        "1d": {
+          "pred_len_hours": 24,
+          "checkpoint": "resources/checkpoints/patchtst_ampds_1d.pth"
+        },
+        "7d": {
+          "pred_len_hours": 168,
+          "checkpoint": "resources/checkpoints/patchtst_ampds_7d.pth"
+        }
+      }
+    },
+    {
+      "id": "timexer_ampds",
+      "label": "TimeXer（AMPds 单变量）",
+      "dataset_line": "ampds_single",
+      "seq_len": 512,
+      "label_len": 48,
+      "features_mode": "S",
+      "enc_in": 1,
+      "target_column": "WHE",
+      "required_columns": ["WHE"],
+      "horizons": {
+        "1d": {
+          "pred_len_hours": 24,
+          "checkpoint": "resources/checkpoints/timexer_ampds_1d.pth"
+        },
+        "7d": {
+          "pred_len_hours": 168,
+          "checkpoint": "resources/checkpoints/timexer_ampds_7d.pth"
+        }
+      }
+    },
+    {
+      "id": "patchtst_londonb0",
+      "label": "PatchTST（London B0 单变量）",
+      "dataset_line": "londonb0_multi",
+      "seq_len": 512,
+      "label_len": 48,
+      "features_mode": "S",
+      "enc_in": 1,
+      "target_column": "WHE",
+      "required_columns": ["WHE"],
+      "horizons": {
+        "1d": {
+          "pred_len_hours": 24,
+          "checkpoint": "resources/checkpoints/patchtst_londonb0_1d.pth"
+        },
+        "7d": {
+          "pred_len_hours": 168,
+          "checkpoint": "resources/checkpoints/patchtst_londonb0_7d.pth"
+        }
+      }
+    },
+    {
+      "id": "timexer_londonb0",
+      "label": "TimeXer（London B0 单变量）",
+      "dataset_line": "londonb0_multi",
+      "seq_len": 512,
+      "label_len": 48,
+      "features_mode": "S",
+      "enc_in": 1,
+      "target_column": "WHE",
+      "required_columns": ["WHE"],
+      "horizons": {
+        "1d": {
+          "pred_len_hours": 24,
+          "checkpoint": "resources/checkpoints/timexer_londonb0_1d.pth"
+        },
+        "7d": {
+          "pred_len_hours": 168,
+          "checkpoint": "resources/checkpoints/timexer_londonb0_7d.pth"
+        }
+      }
+    },
+    {
+      "id": "patchtst",
+      "label": "PatchTST",
+      "horizons": {
+        "1d": {
+          "pred_len_hours": 24,
+          "checkpoint": null
+        },
+        "7d": {
+          "pred_len_hours": 168,
+          "checkpoint": null
+        }
+      }
+    },
+    {
+      "id": "timexer",
+      "label": "TimeXer",
+      "horizons": {
+        "1d": {
+          "pred_len_hours": 24,
+          "checkpoint": null
+        },
+        "7d": {
+          "pred_len_hours": 168,
+          "checkpoint": null
+        }
+      }
+    }
+  ]
+}
