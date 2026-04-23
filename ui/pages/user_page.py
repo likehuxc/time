@@ -1,4 +1,4 @@
-"""用户中心（本地多账号模式说明）。"""
+"""用户中心：本地多账号模式说明与账户操作。"""
 
 from __future__ import annotations
 
@@ -19,7 +19,7 @@ from ui.change_password_dialog import ChangePasswordDialog
 
 
 class UserPage(QWidget):
-    """本地多用户会话信息与占位操作。"""
+    """本地多用户会话信息与账户操作。"""
 
     logout_requested = pyqtSignal()
 
@@ -36,34 +36,36 @@ class UserPage(QWidget):
         self._current_username: str | None = None
 
         title = QLabel("用户中心")
-        title.setObjectName("userPageTitle")
+        title.setObjectName("pageTitle")
 
         mode = QLabel(
             "<p><b>当前模式：</b>本地多用户（桌面应用，账号信息仅保存在当前电脑）。</p>"
         )
         mode.setWordWrap(True)
+        mode.setObjectName("pageCard")
 
         cred = QLabel(
-            "<p><b>凭据存储：</b>本地账户信息保存在 "
-            "<code>runtime/users.json</code> 中，密码仅保存摘要。</p>"
+            "<p><b>凭据存储：</b>本地账户信息保存在 <code>runtime/users.json</code> 中，"
+            "密码仅保存摘要。</p>"
         )
         cred.setWordWrap(True)
+        cred.setObjectName("pageCard")
 
         self._current_user = QLabel("当前登录：未登录")
-        self._current_user.setObjectName("currentUserLabel")
+        self._current_user.setObjectName("summaryCard")
         self._current_user.setTextFormat(Qt.PlainText)
         self._current_user.setWordWrap(True)
 
         change_password = QPushButton("修改密码")
-        change_password.setObjectName("changePasswordButton")
+        change_password.setObjectName("secondaryButton")
         change_password.clicked.connect(self._on_change_password_clicked)
 
         logout = QPushButton("退出登录")
-        logout.setObjectName("logoutButton")
+        logout.setObjectName("secondaryButton")
         logout.clicked.connect(self.logout_requested.emit)
 
         delete_account = QPushButton("注销账号")
-        delete_account.setObjectName("deleteAccountButton")
+        delete_account.setObjectName("dangerButton")
         delete_account.clicked.connect(self._on_delete_account_clicked)
 
         layout = QVBoxLayout(self)

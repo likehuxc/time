@@ -74,8 +74,10 @@ class ForecastPage(QWidget):
         self._horizon_combo.addItem("7天", "7d")
 
         self._run_btn = QPushButton("开始预测", self)
+        self._run_btn.setObjectName("primaryButton")
         self._run_btn.clicked.connect(self._on_run_clicked)
         self._export_btn = QPushButton("导出预测表格", self)
+        self._export_btn.setObjectName("secondaryButton")
         self._export_btn.clicked.connect(self._on_export_clicked)
         self._export_btn.setEnabled(False)
 
@@ -94,7 +96,7 @@ class ForecastPage(QWidget):
         self._setup_fixed_model_options()
 
         top_bar = QWidget(self)
-        top_bar.setObjectName("forecastTopBar")
+        top_bar.setObjectName("pageCard")
         top_row = QHBoxLayout(top_bar)
         top_row.addWidget(QLabel("户型"))
         top_row.addWidget(self._household_combo)
@@ -107,9 +109,11 @@ class ForecastPage(QWidget):
         top_row.addStretch(1)
 
         bottom_panel = QWidget(self)
-        bottom_panel.setObjectName("forecastBottomPanel")
+        bottom_panel.setObjectName("summaryCard")
         bottom_layout = QVBoxLayout(bottom_panel)
-        bottom_layout.addWidget(QLabel("结果摘要"))
+        summary_title = QLabel("结果摘要")
+        summary_title.setObjectName("sectionTitle")
+        bottom_layout.addWidget(summary_title)
         bottom_layout.addWidget(self._result_label)
 
         layout = QVBoxLayout(self)

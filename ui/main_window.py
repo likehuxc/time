@@ -21,8 +21,10 @@ class MainWindow(QMainWindow):
         super().__init__(parent)
         self.setWindowTitle("Household Load Forecast System")
         self.resize(960, 600)
+        self.setObjectName("mainWindowRoot")
 
         self._tabs = QTabWidget(self)
+        self._tabs.setObjectName("mainTabs")
         self.setCentralWidget(self._tabs)
 
         self._data = DataPage(self)
@@ -37,6 +39,7 @@ class MainWindow(QMainWindow):
 
         self._data.prepared_hourly_ready.connect(self._on_data_hourly_ready)
         self._user.logout_requested.connect(self.logout_requested.emit)
+        self.statusBar().setObjectName("mainStatusBar")
         self.statusBar().showMessage("就绪。请使用顶部页签切换各工作台。")
 
     def set_current_user(self, username: str) -> None:
@@ -57,5 +60,5 @@ class MainWindow(QMainWindow):
     def _on_data_hourly_ready(self, series: object) -> None:
         self._forecast.load_prepared_series(series)
         self.statusBar().showMessage(
-            "已将小时级 WHE 同步至预测工作台；当前仍在数据工作台，可切换到「预测工作台」查看。"
+            "已将小时级 WHE 同步至预测工作台；当前仍在数据工作台，可切换到“预测工作台”查看。"
         )

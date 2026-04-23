@@ -51,7 +51,7 @@ class DataPage(QWidget):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         title = QLabel("数据工作台")
-        title.setObjectName("dataPageTitle")
+        title.setObjectName("pageTitle")
 
         hint = QLabel(
             "选择含 <b>WHE</b> 列的 CSV（可选 <b>date</b>、<b>OT</b>、<b>Wind</b>、<b>RH</b>），"
@@ -59,23 +59,26 @@ class DataPage(QWidget):
             "<br/>若无 <b>date</b> 列，需在后续版本填写起始时间与频率；当前请改用带日期列的模板。"
         )
         hint.setWordWrap(True)
+        hint.setObjectName("pageIntro")
 
         self._pick_btn = QPushButton("选择 CSV 文件…", self)
+        self._pick_btn.setObjectName("primaryButton")
         self._pick_btn.clicked.connect(self._on_pick_file)
 
         self._status = QLabel("未选择文件。")
         self._status.setWordWrap(True)
+        self._status.setObjectName("summaryCard")
 
         self._btn_download = QPushButton("下载数据集模板", self)
-        self._btn_download.setObjectName("dataPageBtnDownloadTemplate")
+        self._btn_download.setObjectName("secondaryButton")
         self._btn_download.clicked.connect(self._on_download_template)
 
         self._btn_show_table = QPushButton("数据展示", self)
-        self._btn_show_table.setObjectName("dataPageBtnShowTable")
+        self._btn_show_table.setObjectName("secondaryButton")
         self._btn_show_table.clicked.connect(self._show_table_view)
 
         self._btn_show_chart = QPushButton("数据可视化", self)
-        self._btn_show_chart.setObjectName("dataPageBtnShowChart")
+        self._btn_show_chart.setObjectName("secondaryButton")
         self._btn_show_chart.clicked.connect(self._show_chart_view)
 
         toolbar = QHBoxLayout()
@@ -101,7 +104,7 @@ class DataPage(QWidget):
         self._stack.addWidget(self._chart_canvas)
 
         stats_title = QLabel("WHE 统计（小时级）")
-        stats_title.setObjectName("dataPageStatsTitle")
+        stats_title.setObjectName("sectionTitle")
 
         self._stat_mean = QLabel("均值：—")
         self._stat_mean.setObjectName("dataPageStatMean")

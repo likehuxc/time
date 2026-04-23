@@ -35,30 +35,30 @@ class RecordsPage(QWidget):
         super().__init__(parent)
         self._current_username: str | None = None
         page_title = QLabel("历史预测记录")
-        page_title.setObjectName("recordsPageTitle")
+        page_title.setObjectName("pageTitle")
 
         intro = QLabel(
             "下表列出已保存至本地数据库的预测任务摘要，便于回溯模型、周期与输出位置。"
         )
         intro.setWordWrap(True)
-        intro.setObjectName("recordsIntro")
+        intro.setObjectName("pageIntro")
 
         self._empty_hint = QLabel(
             "暂无历史预测记录。请在预测工作台完成一次预测并保存后，再回到本页查看。"
         )
-        self._empty_hint.setObjectName("recordsEmptyHint")
+        self._empty_hint.setObjectName("summaryCard")
         self._empty_hint.setWordWrap(True)
 
         refresh = QPushButton("刷新")
-        refresh.setObjectName("recordsRefreshButton")
+        refresh.setObjectName("secondaryButton")
         refresh.clicked.connect(self.refresh)
 
         delete_selected = QPushButton("删除选中")
-        delete_selected.setObjectName("recordsDeleteSelectedButton")
+        delete_selected.setObjectName("dangerButton")
         delete_selected.clicked.connect(self._delete_selected)
 
         clear_all = QPushButton("一键清空")
-        clear_all.setObjectName("recordsClearAllButton")
+        clear_all.setObjectName("dangerButton")
         clear_all.clicked.connect(self._clear_all)
 
         toolbar = QHBoxLayout()
