@@ -2,11 +2,17 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtWidgets import QDialog, QLabel, QMessageBox, QPushButton, QVBoxLayout, QWidget
 
 from app.paths import RUNTIME_DIR
 from services.auth_service import AuthError, delete_user_account
+from services.login_preferences import (
+    DEFAULT_REMEMBERED_LOGIN_PATH,
+    clear_remembered_login_for_username,
+)
 from services.record_service import clear_prediction_records
 from services.user_store import UserStore
 from ui.change_password_dialog import ChangePasswordDialog
@@ -17,10 +23,18 @@ class UserPage(QWidget):
 
     logout_requested = pyqtSignal()
 
-    def __init__(self, parent: QWidget | None = None) -> None:
+    def __init__(
+        self,
+        parent: QWidget | None = None,
+        *,
+        store: UserStore | None = None,
+        remembered_login_path: Path = DEFAULT_REMEMBERED_LOGIN_PATH,
+    ) -> None:
         super().__init__(parent)
-        self._store = UserStore(RUNTIME_DIR / "users.json")
+        self._store = store if store is not None else UserStore(RUNTIME_DIR / "users.json")
+        self._remembered_login_path = remembered_login_path
         self._current_username: str | None = None
+
         title = QLabel("用户中心")
         title.setObjectName("userPageTitle")
 
@@ -93,6 +107,9 @@ class UserPage(QWidget):
             existing_user = self._store.find_user(self._current_username)
             delete_user_account(self._store, self._current_username)
             clear_prediction_records(username=self._current_username)
+            clear_remembered_login_for_username(
+                self._remembered_login_path, username=self._current_username
+            )
         except AuthError as exc:
             QMessageBox.warning(self, "注销失败", str(exc))
             return
