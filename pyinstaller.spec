@@ -79,3 +79,12 @@ coll = COLLECT(
     upx_exclude=[],
     name='HouseholdLoadForecast',
 )
+
+# Copy user-facing docs to the top of the onedir tree (next to the exe) so
+# end users see them immediately after unzipping, not buried under _internal.
+import shutil as _shutil
+_DIST_ROOT = os.path.join(DISTPATH, 'HouseholdLoadForecast')
+for _doc in ('USER_GUIDE.md', 'README.md'):
+    _src = os.path.join(os.path.dirname(os.path.abspath(SPEC)), _doc)
+    if os.path.isfile(_src) and os.path.isdir(_DIST_ROOT):
+        _shutil.copy2(_src, os.path.join(_DIST_ROOT, _doc))
