@@ -221,9 +221,12 @@ class ForecastPage(QWidget):
             self._clear_export_state()
             self._clear_chart()
             return
-        except Exception:  # noqa: BLE001 - 预测页需要兜底，避免未预期异常直接打断 UI
-            message = "预测失败，请检查模型资源或配置。"
-            QMessageBox.critical(self, "预测失败", message)
+        except Exception as exc:  # noqa: BLE001 - 预测页需要兜底，避免未预期异常直接打断 UI
+            import traceback
+            detail = f"{type(exc).__name__}: {exc}"
+            tb = traceback.format_exc()
+            message = f"预测失败，请检查模型资源或配置。\n\n{detail}"
+            QMessageBox.critical(self, "预测失败", f"{message}\n\n{tb}")
             self._result_label.setText(message)
             self._clear_export_state()
             self._clear_chart()
