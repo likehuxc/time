@@ -2,8 +2,11 @@
 
 from __future__ import annotations
 
+from pathlib import Path
+
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtWidgets import (
+    QCheckBox,
     QDialog,
     QFormLayout,
     QHBoxLayout,
@@ -17,6 +20,12 @@ from PyQt5.QtWidgets import (
 
 from app.paths import RUNTIME_DIR
 from services.auth_service import AuthError, authenticate_user
+from services.login_preferences import (
+    DEFAULT_REMEMBERED_LOGIN_PATH,
+    clear_remembered_login,
+    load_remembered_login,
+    save_remembered_login,
+)
 from services.user_store import UserStore, UserStoreError
 from ui.password_field import PasswordField
 from ui.register_dialog import RegisterDialog
@@ -27,18 +36,25 @@ class LoginWindow(QDialog):
 
     login_succeeded = pyqtSignal(str)
 
-    def __init__(self, parent: QWidget | None = None) -> None:
+    def __init__(
+        self,
+        parent: QWidget | None = None,
+        *,
+        store: UserStore | None = None,
+        remembered_login_path: Path = DEFAULT_REMEMBERED_LOGIN_PATH,
+    ) -> None:
         super().__init__(parent)
         self.setWindowTitle("登录")
         self.setModal(True)
         self.resize(440, 280)
 
         self._users_path = RUNTIME_DIR / "users.json"
-        self._store = UserStore(self._users_path)
+        self._store = store if store is not None else UserStore(self._users_path)
         self._storage_ready = self._ensure_storage_dir()
+        self._remembered_login_path = remembered_login_path
         self.current_username: str | None = None
 
-        title = QLabel("家庭用电量预测系统")
+        title = QLabel("家庭用电负载预测系统")
         title.setAlignment(Qt.AlignCenter)
         title.setStyleSheet("font-size: 18pt; font-weight: bold;")
 
@@ -51,6 +67,9 @@ class LoginWindow(QDialog):
         form = QFormLayout()
         form.addRow("用户名", self._username)
         form.addRow("密码", self._password_field)
+
+        self._remember_password = QCheckBox("记住密码", self)
+        self._remember_password.setChecked(True)
 
         self._login_btn = QPushButton("登录")
         self._login_btn.setDefault(True)
@@ -72,8 +91,20 @@ class LoginWindow(QDialog):
         root.addWidget(title)
         root.addSpacing(8)
         root.addLayout(form)
+        root.addWidget(self._remember_password)
         root.addStretch(1)
         root.addLayout(buttons)
+
+        self._remember_password.toggled.connect(self._on_remember_password_toggled)
+        self._load_remembered_login()
+
+    def _load_remembered_login(self) -> None:
+        remembered = load_remembered_login(self._remembered_login_path)
+        if remembered is None:
+            return
+        self._username.setText(remembered.username)
+        self._password.setText(remembered.password)
+        self._remember_password.setChecked(remembered.remember_password)
 
     def _on_register_clicked(self) -> None:
         if not self._storage_ready:
@@ -83,6 +114,11 @@ class LoginWindow(QDialog):
             self._username.setText(dialog.created_username)
             self._password.clear()
             self._password.setFocus()
+
+    def _on_remember_password_toggled(self, checked: bool) -> None:
+        if checked:
+            return
+        self._persist_remembered_login()
 
     def _show_storage_error(self, action: str, _exc: OSError) -> None:
         QMessageBox.critical(
@@ -101,6 +137,20 @@ class LoginWindow(QDialog):
             self._show_storage_error("初始化本地账户目录", exc)
             return False
         return True
+
+    def _persist_remembered_login(self) -> None:
+        try:
+            if self._remember_password.isChecked():
+                save_remembered_login(
+                    self._remembered_login_path,
+                    username=self._username.text(),
+                    password=self._password.text(),
+                )
+            else:
+                clear_remembered_login(self._remembered_login_path)
+        except OSError as exc:
+            action = "保存记住密码设置" if self._remember_password.isChecked() else "清理记住密码设置"
+            self._show_storage_error(action, exc)
 
     def _try_login(self) -> None:
         if not self._storage_ready:
@@ -127,6 +177,7 @@ class LoginWindow(QDialog):
             self._show_store_exception(exc)
             return
 
+        self._persist_remembered_login()
         self.current_username = user.username
         self.login_succeeded.emit(user.username)
         self.accept()

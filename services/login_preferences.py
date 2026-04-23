@@ -45,6 +45,8 @@ def load_remembered_login(
         return None
     if not all(isinstance(value, str) for value in (username, password, updated_at)):
         return None
+    if not remember_password:
+        return None
     return RememberedLogin(
         remember_password=remember_password,
         username=username,
