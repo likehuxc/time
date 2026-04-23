@@ -12,3 +12,11 @@ def test_apply_theme_sets_shared_stylesheet_markers(qapp) -> None:
     assert "#loginCard" in stylesheet
     assert "QTabBar::tab:selected" in stylesheet
     assert "#passwordToggleButton" in stylesheet
+
+
+def test_apply_theme_explicitly_styles_label_foreground_on_dark_surfaces(qapp) -> None:
+    apply_theme(qapp)
+
+    stylesheet = qapp.styleSheet()
+    assert "QLabel {" in stylesheet
+    assert "QLabel#summaryCard" in stylesheet

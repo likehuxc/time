@@ -14,12 +14,22 @@ QWidget#mainWindowRoot {
     color: #e6f3ff;
 }
 
+QWidget {
+    color: #d8edf8;
+}
+
+QLabel {
+    color: #d8edf8;
+    background-color: transparent;
+}
+
 QWidget#loginCard,
 QWidget#registerCard,
 QWidget#pageCard,
 QWidget#summaryCard,
 QLabel#summaryCard {
     background-color: rgba(11, 28, 43, 0.9);
+    color: #e6f3ff;
     border: 1px solid #1f4d66;
     border-radius: 18px;
     padding: 14px;
