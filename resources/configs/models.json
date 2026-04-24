@@ -12,6 +12,10 @@
         "7d": {
           "pred_len_hours": 168,
           "checkpoint": null
+        },
+        "30d": {
+          "pred_len_hours": 720,
+          "checkpoint": null
         }
       }
     },
@@ -33,6 +37,10 @@
         "7d": {
           "pred_len_hours": 168,
           "checkpoint": "resources/checkpoints/dc_itransformer_londonb0_7d.pth"
+        },
+        "30d": {
+          "pred_len_hours": 720,
+          "checkpoint": "resources/checkpoints/dc_itransformer_londonb0_30d.pth"
         }
       }
     },
@@ -54,6 +62,10 @@
         "7d": {
           "pred_len_hours": 168,
           "checkpoint": "resources/checkpoints/dc_itransformer_ampds_7d.pth"
+        },
+        "30d": {
+          "pred_len_hours": 720,
+          "checkpoint": "resources/checkpoints/dc_itransformer_ampds_30d.pth"
         }
       }
     },
@@ -75,6 +87,10 @@
         "7d": {
           "pred_len_hours": 168,
           "checkpoint": "resources/checkpoints/patchtst_ampds_7d.pth"
+        },
+        "30d": {
+          "pred_len_hours": 720,
+          "checkpoint": "resources/checkpoints/patchtst_ampds_30d.pth"
         }
       }
     },
@@ -96,6 +112,10 @@
         "7d": {
           "pred_len_hours": 168,
           "checkpoint": "resources/checkpoints/timexer_ampds_7d.pth"
+        },
+        "30d": {
+          "pred_len_hours": 720,
+          "checkpoint": "resources/checkpoints/timexer_ampds_30d.pth"
         }
       }
     },
@@ -117,6 +137,10 @@
         "7d": {
           "pred_len_hours": 168,
           "checkpoint": "resources/checkpoints/patchtst_londonb0_7d.pth"
+        },
+        "30d": {
+          "pred_len_hours": 720,
+          "checkpoint": "resources/checkpoints/patchtst_londonb0_30d.pth"
         }
       }
     },
@@ -138,6 +162,10 @@
         "7d": {
           "pred_len_hours": 168,
           "checkpoint": "resources/checkpoints/timexer_londonb0_7d.pth"
+        },
+        "30d": {
+          "pred_len_hours": 720,
+          "checkpoint": "resources/checkpoints/timexer_londonb0_30d.pth"
         }
       }
     },
@@ -152,6 +180,10 @@
         "7d": {
           "pred_len_hours": 168,
           "checkpoint": null
+        },
+        "30d": {
+          "pred_len_hours": 720,
+          "checkpoint": null
         }
       }
     },
@@ -165,6 +197,10 @@
         },
         "7d": {
           "pred_len_hours": 168,
+          "checkpoint": null
+        },
+        "30d": {
+          "pred_len_hours": 720,
           "checkpoint": null
         }
       }

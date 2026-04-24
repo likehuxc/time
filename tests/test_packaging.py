@@ -2,8 +2,6 @@
 
 from __future__ import annotations
 
-from pathlib import Path
-
 from app.config import load_models_registry
 from app.paths import PROJECT_ROOT
 
@@ -50,3 +48,26 @@ def test_registered_checkpoint_files_exist_under_resources() -> None:
                 continue
             path = PROJECT_ROOT / checkpoint
             assert path.is_file(), f"缺少 checkpoint 文件：{path}"
+
+
+def test_user_facing_models_register_thirty_day_checkpoints() -> None:
+    registry = load_models_registry()
+    models = {
+        model.get("id"): model
+        for model in registry.get("models", [])
+        if isinstance(model, dict) and isinstance(model.get("id"), str)
+    }
+
+    expected = {
+        "dc_itransformer_ampds": "resources/checkpoints/dc_itransformer_ampds_30d.pth",
+        "dc_itransformer_londonb0": "resources/checkpoints/dc_itransformer_londonb0_30d.pth",
+        "patchtst_ampds": "resources/checkpoints/patchtst_ampds_30d.pth",
+        "patchtst_londonb0": "resources/checkpoints/patchtst_londonb0_30d.pth",
+        "timexer_ampds": "resources/checkpoints/timexer_ampds_30d.pth",
+        "timexer_londonb0": "resources/checkpoints/timexer_londonb0_30d.pth",
+    }
+
+    for model_id, checkpoint in expected.items():
+        horizons = models[model_id]["horizons"]
+        assert horizons["30d"]["pred_len_hours"] == 720
+        assert horizons["30d"]["checkpoint"] == checkpoint

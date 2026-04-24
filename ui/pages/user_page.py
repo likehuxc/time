@@ -1,62 +1,70 @@
-"""用户中心（本地多账号模式说明）。"""
+"""用户中心页面。"""
 
 from __future__ import annotations
+
+from pathlib import Path
 
 from PyQt5.QtCore import Qt, pyqtSignal
 from PyQt5.QtWidgets import QDialog, QLabel, QMessageBox, QPushButton, QVBoxLayout, QWidget
 
 from app.paths import RUNTIME_DIR
 from services.auth_service import AuthError, delete_user_account
+from services.login_preferences import (
+    DEFAULT_REMEMBERED_LOGIN_PATH,
+    clear_remembered_login_for_username,
+)
 from services.record_service import clear_prediction_records
 from services.user_store import UserStore
 from ui.change_password_dialog import ChangePasswordDialog
 
 
 class UserPage(QWidget):
-    """本地多用户会话信息与占位操作。"""
+    """本地多用户会话信息与账号操作。"""
 
     logout_requested = pyqtSignal()
 
-    def __init__(self, parent: QWidget | None = None) -> None:
+    def __init__(
+        self,
+        parent: QWidget | None = None,
+        *,
+        store: UserStore | None = None,
+        remembered_login_path: Path = DEFAULT_REMEMBERED_LOGIN_PATH,
+    ) -> None:
         super().__init__(parent)
-        self._store = UserStore(RUNTIME_DIR / "users.json")
+        self._store = store if store is not None else UserStore(RUNTIME_DIR / "users.json")
+        self._remembered_login_path = remembered_login_path
         self._current_username: str | None = None
+
         title = QLabel("用户中心")
-        title.setObjectName("userPageTitle")
-
-        mode = QLabel(
-            "<p><b>当前模式：</b>本地多用户（桌面应用，账号信息仅保存在当前电脑）。</p>"
-        )
-        mode.setWordWrap(True)
-
-        cred = QLabel(
-            "<p><b>凭据存储：</b>本地账户信息保存在 "
-            "<code>runtime/users.json</code> 中，密码仅保存摘要。</p>"
-        )
-        cred.setWordWrap(True)
+        title.setObjectName("pageTitle")
 
         self._current_user = QLabel("当前登录：未登录")
-        self._current_user.setObjectName("currentUserLabel")
+        self._current_user.setObjectName("summaryCard")
         self._current_user.setTextFormat(Qt.PlainText)
         self._current_user.setWordWrap(True)
 
+        actions_title = QLabel("账号操作")
+        actions_title.setObjectName("sectionTitle")
+
         change_password = QPushButton("修改密码")
-        change_password.setObjectName("changePasswordButton")
+        change_password.setObjectName("secondaryButton")
+        change_password.setFocusPolicy(Qt.NoFocus)
         change_password.clicked.connect(self._on_change_password_clicked)
 
         logout = QPushButton("退出登录")
-        logout.setObjectName("logoutButton")
+        logout.setObjectName("secondaryButton")
+        logout.setFocusPolicy(Qt.NoFocus)
         logout.clicked.connect(self.logout_requested.emit)
 
         delete_account = QPushButton("注销账号")
-        delete_account.setObjectName("deleteAccountButton")
+        delete_account.setObjectName("dangerButton")
+        delete_account.setFocusPolicy(Qt.NoFocus)
         delete_account.clicked.connect(self._on_delete_account_clicked)
 
         layout = QVBoxLayout(self)
         layout.addWidget(title)
-        layout.addWidget(mode)
-        layout.addWidget(cred)
         layout.addWidget(self._current_user)
+        layout.addWidget(actions_title)
         layout.addWidget(change_password)
         layout.addWidget(logout)
         layout.addWidget(delete_account)
@@ -93,6 +101,9 @@ class UserPage(QWidget):
             existing_user = self._store.find_user(self._current_username)
             delete_user_account(self._store, self._current_username)
             clear_prediction_records(username=self._current_username)
+            clear_remembered_login_for_username(
+                self._remembered_login_path, username=self._current_username
+            )
         except AuthError as exc:
             QMessageBox.warning(self, "注销失败", str(exc))
             return

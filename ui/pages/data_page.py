@@ -24,6 +24,7 @@ from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import (
     QAbstractItemView,
     QFileDialog,
+    QHeaderView,
     QHBoxLayout,
     QLabel,
     QMessageBox,
@@ -51,7 +52,7 @@ class DataPage(QWidget):
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         title = QLabel("数据工作台")
-        title.setObjectName("dataPageTitle")
+        title.setObjectName("pageTitle")
 
         hint = QLabel(
             "选择含 <b>WHE</b> 列的 CSV（可选 <b>date</b>、<b>OT</b>、<b>Wind</b>、<b>RH</b>），"
@@ -59,23 +60,26 @@ class DataPage(QWidget):
             "<br/>若无 <b>date</b> 列，需在后续版本填写起始时间与频率；当前请改用带日期列的模板。"
         )
         hint.setWordWrap(True)
+        hint.setObjectName("pageIntro")
 
         self._pick_btn = QPushButton("选择 CSV 文件…", self)
+        self._pick_btn.setObjectName("primaryButton")
         self._pick_btn.clicked.connect(self._on_pick_file)
 
         self._status = QLabel("未选择文件。")
         self._status.setWordWrap(True)
+        self._status.setObjectName("summaryCard")
 
         self._btn_download = QPushButton("下载数据集模板", self)
-        self._btn_download.setObjectName("dataPageBtnDownloadTemplate")
+        self._btn_download.setObjectName("secondaryButton")
         self._btn_download.clicked.connect(self._on_download_template)
 
         self._btn_show_table = QPushButton("数据展示", self)
-        self._btn_show_table.setObjectName("dataPageBtnShowTable")
+        self._btn_show_table.setObjectName("secondaryButton")
         self._btn_show_table.clicked.connect(self._show_table_view)
 
         self._btn_show_chart = QPushButton("数据可视化", self)
-        self._btn_show_chart.setObjectName("dataPageBtnShowChart")
+        self._btn_show_chart.setObjectName("secondaryButton")
         self._btn_show_chart.clicked.connect(self._show_chart_view)
 
         toolbar = QHBoxLayout()
@@ -88,6 +92,9 @@ class DataPage(QWidget):
         self._table.setObjectName("dataPageTable")
         self._table.setAlternatingRowColors(True)
         self._table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self._table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self._table.horizontalHeader().setStretchLastSection(True)
+        self._table.verticalHeader().hide()
 
         self._figure = Figure(figsize=(8.0, 4.0), layout="tight")
         self._chart_canvas = FigureCanvasQTAgg(self._figure)
@@ -101,7 +108,7 @@ class DataPage(QWidget):
         self._stack.addWidget(self._chart_canvas)
 
         stats_title = QLabel("WHE 统计（小时级）")
-        stats_title.setObjectName("dataPageStatsTitle")
+        stats_title.setObjectName("sectionTitle")
 
         self._stat_mean = QLabel("均值：—")
         self._stat_mean.setObjectName("dataPageStatMean")
@@ -117,10 +124,13 @@ class DataPage(QWidget):
         layout.addWidget(self._status)
         layout.addLayout(toolbar)
         layout.addWidget(self._stack, stretch=1)
-        layout.addWidget(stats_title)
-        layout.addWidget(self._stat_mean)
-        layout.addWidget(self._stat_max)
-        layout.addWidget(self._stat_min)
+        stats_row = QHBoxLayout()
+        stats_row.addWidget(stats_title)
+        stats_row.addStretch(1)
+        stats_row.addWidget(self._stat_mean)
+        stats_row.addWidget(self._stat_max)
+        stats_row.addWidget(self._stat_min)
+        layout.addLayout(stats_row)
 
         self._show_table_view()
 
