@@ -14,7 +14,9 @@ env/
 
 # 构建产物
 build/
+build-hotfix*/
 dist/
+dist-hotfix*/
 dist.zip
 HouseholdLoadForecast-release.zip
 *.spec.bak

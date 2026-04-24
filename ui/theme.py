@@ -67,6 +67,30 @@ QTableWidget {
     selection-color: #ffffff;
 }
 
+QComboBox {
+    min-height: 34px;
+    color: #e6f3ff;
+    padding-right: 28px;
+}
+
+QComboBox::drop-down {
+    border: none;
+    background-color: #143149;
+    width: 24px;
+}
+
+QComboBox::down-arrow {
+    border: none;
+}
+
+QComboBox QAbstractItemView {
+    background-color: #102739;
+    color: #e6f3ff;
+    border: 1px solid #29536b;
+    selection-background-color: #1d4d6b;
+    selection-color: #ffffff;
+}
+
 QTableWidget {
     gridline-color: #163347;
 }
@@ -89,6 +113,33 @@ QHeaderView::section {
     border: none;
     border-bottom: 1px solid #29536b;
     padding: 8px 10px;
+}
+
+QTableCornerButton::section,
+QHeaderView::section:vertical {
+    background-color: #102638;
+    color: #9fc4d7;
+    border: none;
+    border-right: 1px solid #29536b;
+    border-bottom: 1px solid #29536b;
+}
+
+QMenu {
+    background-color: #102739;
+    color: #e6f3ff;
+    border: 1px solid #29536b;
+    padding: 4px;
+}
+
+QMenu::item {
+    color: #e6f3ff;
+    padding: 6px 18px;
+    background-color: transparent;
+}
+
+QMenu::item:selected {
+    color: #ffffff;
+    background-color: #1d4d6b;
 }
 
 QPushButton,

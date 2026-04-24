@@ -21,6 +21,7 @@ class ForecastUnavailableError(RuntimeError):
 _SUPPORTED_HORIZON_STEPS: dict[str, int] = {
     "1d": 24,
     "7d": 168,
+    "30d": 720,
 }
 
 

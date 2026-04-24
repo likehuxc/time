@@ -27,3 +27,18 @@ def test_apply_theme_styles_alternating_table_rows_for_dark_mode(qapp) -> None:
 
     stylesheet = qapp.styleSheet()
     assert "alternate-background-color" in stylesheet
+
+
+def test_apply_theme_styles_combo_popup_for_dark_mode(qapp) -> None:
+    apply_theme(qapp)
+
+    stylesheet = qapp.styleSheet()
+    assert "QComboBox QAbstractItemView" in stylesheet
+
+
+def test_apply_theme_styles_context_menus_for_dark_mode(qapp) -> None:
+    apply_theme(qapp)
+
+    stylesheet = qapp.styleSheet()
+    assert "QMenu {" in stylesheet
+    assert "QMenu::item:selected" in stylesheet

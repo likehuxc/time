@@ -24,6 +24,7 @@ from PyQt5.QtCore import pyqtSignal
 from PyQt5.QtWidgets import (
     QAbstractItemView,
     QFileDialog,
+    QHeaderView,
     QHBoxLayout,
     QLabel,
     QMessageBox,
@@ -91,6 +92,9 @@ class DataPage(QWidget):
         self._table.setObjectName("dataPageTable")
         self._table.setAlternatingRowColors(True)
         self._table.setEditTriggers(QAbstractItemView.NoEditTriggers)
+        self._table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self._table.horizontalHeader().setStretchLastSection(True)
+        self._table.verticalHeader().hide()
 
         self._figure = Figure(figsize=(8.0, 4.0), layout="tight")
         self._chart_canvas = FigureCanvasQTAgg(self._figure)
@@ -120,10 +124,13 @@ class DataPage(QWidget):
         layout.addWidget(self._status)
         layout.addLayout(toolbar)
         layout.addWidget(self._stack, stretch=1)
-        layout.addWidget(stats_title)
-        layout.addWidget(self._stat_mean)
-        layout.addWidget(self._stat_max)
-        layout.addWidget(self._stat_min)
+        stats_row = QHBoxLayout()
+        stats_row.addWidget(stats_title)
+        stats_row.addStretch(1)
+        stats_row.addWidget(self._stat_mean)
+        stats_row.addWidget(self._stat_max)
+        stats_row.addWidget(self._stat_min)
+        layout.addLayout(stats_row)
 
         self._show_table_view()
 

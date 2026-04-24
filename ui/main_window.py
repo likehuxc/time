@@ -38,6 +38,7 @@ class MainWindow(QMainWindow):
         self._tabs.addTab(self._user, "用户")
 
         self._data.prepared_hourly_ready.connect(self._on_data_hourly_ready)
+        self._forecast.prediction_records_changed.connect(self._records.refresh)
         self._user.logout_requested.connect(self.logout_requested.emit)
         self.statusBar().setObjectName("mainStatusBar")
         self.statusBar().showMessage("就绪。请使用顶部页签切换各工作台。")

@@ -1,4 +1,4 @@
-"""历史预测记录列表。"""
+"""历史预测记录列表页。"""
 
 from __future__ import annotations
 
@@ -27,25 +27,23 @@ from services.record_service import (
 
 
 class RecordsPage(QWidget):
-    """展示 prediction_records 表；无数据时给出明确提示。"""
+    """展示当前用户的历史预测记录。"""
 
     _OUTPUT_PATH_COLUMN = 5
 
     def __init__(self, parent: QWidget | None = None) -> None:
         super().__init__(parent)
         self._current_username: str | None = None
+        self._row_record_ids: list[int] = []
+
         page_title = QLabel("历史预测记录")
         page_title.setObjectName("pageTitle")
 
-        intro = QLabel(
-            "下表列出已保存至本地数据库的预测任务摘要，便于回溯模型、周期与输出位置。"
-        )
+        intro = QLabel("这里会自动展示当前账号最近生成的预测记录和导出路径。")
         intro.setWordWrap(True)
         intro.setObjectName("pageIntro")
 
-        self._empty_hint = QLabel(
-            "暂无历史预测记录。请在预测工作台完成一次预测并保存后，再回到本页查看。"
-        )
+        self._empty_hint = QLabel("暂无历史预测记录，完成一次预测后会自动出现在这里。")
         self._empty_hint.setObjectName("summaryCard")
         self._empty_hint.setWordWrap(True)
 
@@ -70,20 +68,14 @@ class RecordsPage(QWidget):
         self._table = QTableWidget(0, 6, self)
         self._table.setObjectName("recordsTable")
         self._table.setHorizontalHeaderLabels(
-            [
-                "记录ID",
-                "创建时间",
-                "户型",
-                "模型名称",
-                "预测周期",
-                "输出路径",
-            ]
+            ["记录ID", "创建时间", "户型", "模型名称", "预测周期", "输出路径"]
         )
         header = self._table.horizontalHeader()
         header.setSectionResizeMode(QHeaderView.Stretch)
         self._table.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self._table.setSelectionBehavior(QAbstractItemView.SelectRows)
         self._table.setSelectionMode(QAbstractItemView.ExtendedSelection)
+        self._table.verticalHeader().hide()
         self._table.setContextMenuPolicy(Qt.CustomContextMenu)
         self._table.customContextMenuRequested.connect(self._show_table_context_menu)
 
@@ -109,14 +101,17 @@ class RecordsPage(QWidget):
             self._set_rows([])
             return
         rows = list_prediction_records(username=self._current_username, limit=200)
+        rows = sorted(rows, key=lambda row: int(row.get("id", 0) or 0))
         self._set_rows(rows)
 
     def _set_rows(self, rows: list[dict[str, object]]) -> None:
+        self._row_record_ids = []
         self._table.setRowCount(len(rows))
         self._empty_hint.setVisible(len(rows) == 0)
         for i, row in enumerate(rows):
             metrics = self._parse_metrics(row.get("metrics_json", ""))
-            self._table.setItem(i, 0, QTableWidgetItem(str(row.get("id", ""))))
+            self._row_record_ids.append(int(row.get("id", 0) or 0))
+            self._table.setItem(i, 0, QTableWidgetItem(str(i + 1)))
             self._table.setItem(i, 1, QTableWidgetItem(str(row.get("created_at", ""))))
             self._table.setItem(
                 i,
@@ -151,17 +146,12 @@ class RecordsPage(QWidget):
             self._table.setItem(i, 5, QTableWidgetItem(str(row.get("output_path", ""))))
 
     def _delete_selected(self) -> None:
-        record_ids: list[int] = []
-        for index in self._table.selectionModel().selectedRows():
-            item = self._table.item(index.row(), 0)
-            if item is None:
-                continue
-            try:
-                record_ids.append(int(item.text()))
-            except ValueError:
-                continue
         if not self._current_username:
             return
+        record_ids: list[int] = []
+        for index in self._table.selectionModel().selectedRows():
+            if 0 <= index.row() < len(self._row_record_ids):
+                record_ids.append(self._row_record_ids[index.row()])
         delete_prediction_records(record_ids, username=self._current_username)
         self.refresh()
 

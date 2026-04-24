@@ -57,3 +57,14 @@ def test_deleting_current_account_clears_matching_remembered_login(
 
     assert store.find_user("alice") is None
     assert load_remembered_login(remembered_login_path) is None
+
+
+def test_user_page_does_not_show_local_storage_explainer_cards(qapp) -> None:
+    page = UserPage()
+    label_texts = [
+        label.text()
+        for label in page.findChildren(type(page._current_user))
+    ]
+
+    assert all("当前模式" not in text for text in label_texts)
+    assert all("凭据存储" not in text for text in label_texts)
